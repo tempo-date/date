@@ -1,0 +1,23 @@
+.tempo-month {
+  @apply w-20 h-10 m-0 p-0 rounded-sm flex justify-center items-center select-none cursor-pointer;
+
+  &:not(.tempo-month-active) {
+    @apply hover:bg-gray-100;
+  }
+}
+
+.tempo-panel-month-body {
+  @apply w-full h-[300px] p-2 grid grid-cols-3 place-items-center;
+}
+
+.tempo-month-active {
+  @apply bg-sky-500;
+}
+
+.tempo-month-text {
+  @apply font-sans text-[14px];
+}
+
+.tempo-month-active-text {
+  @apply text-white font-sans text-[14px];
+}

@@ -1,0 +1,31 @@
+.tempo-day {
+  @apply w-10 h-10 m-0 p-0 rounded-sm flex justify-center items-center select-none cursor-pointer;
+
+  &:not(.tempo-day-active) {
+    @apply hover:bg-gray-100;
+  }
+}
+
+.tempo-panel-day-body {
+  @apply w-full h-[300px] p-2 grid grid-cols-7 place-items-center;
+}
+
+.tempo-day-neighbor {
+  @apply opacity-40;
+}
+
+.tempo-day-weekend {
+  @apply text-red-500;
+}
+
+.tempo-day-active {
+  @apply bg-sky-500;
+}
+
+.tempo-day-text {
+  @apply text-[14px] font-sans;
+}
+
+.tempo-day-active-text {
+  @apply text-white;
+}

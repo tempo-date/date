@@ -1,0 +1,11 @@
+.tempo-header {
+  @apply flex justify-center items-center gap-2;
+}
+
+.tempo-header-text {
+  @apply text-balance text-[14px] font-sans hover:text-sky-400 cursor-pointer;
+}
+
+.tempo-header-nav {
+  @apply flex justify-center items-center gap-2;
+}
