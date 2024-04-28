@@ -3,7 +3,7 @@ import { ObservableObject, batch } from "@legendapp/state";
 import { For, observer, useComputed } from "@legendapp/state/react";
 import styles from "./day.module.scss";
 import { getDays } from "@/core/date";
-import { cn } from "@/utils/cn";
+import { cn } from "@/utils";
 import { useTempoState } from "../panel";
 import { useCurrentDate } from "@/core/hooks";
 

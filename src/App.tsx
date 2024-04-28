@@ -8,6 +8,7 @@ function App() {
         onChange={(date) => console.log("date", date)}
         onDayChange={(day) => console.log("day", day)}
         onMonthChange={(month) => console.log("month", month)}
+        persistOptions={{ name: "test", strategy: "local-storage" }}
       />
     </div>
   );

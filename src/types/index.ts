@@ -18,8 +18,8 @@ export interface IndexedValue {
 }
 
 interface DateInternalProps {
-  readonly _current?: boolean;
-  readonly _weekend?: boolean;
+  _current?: boolean;
+  _weekend?: boolean;
   __m?: number;
   __y?: number;
 }
@@ -40,8 +40,14 @@ type TempoEvents = {
   [event in `on${Mode}Change`]?: (value: number) => void;
 };
 
+export type PersistenceOptions = {
+  name: string;
+  strategy?: "local-storage" | "session-storage";
+};
 export interface DatePickerProps extends TempoEvents {
   onChange?(date: TempoDate): void;
+  syncIdentifier?: string;
+  persistOptions?: PersistenceOptions;
 }
 
 export type MonthStruct = {

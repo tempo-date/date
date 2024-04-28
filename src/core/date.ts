@@ -96,8 +96,8 @@ export function getDays(year: number, month: number): Array<TempoDate> {
   }
 
   const markedDays = days.map((date) => {
-    Object.defineProperty(date, "_current", { value: current(date), writable: false });
-    Object.defineProperty(date, "_weekend", { value: getWeekend(date), writable: false });
+    date["_current"] = current(date);
+    date["_weekend"] = getWeekend(date);
 
     return date;
   });

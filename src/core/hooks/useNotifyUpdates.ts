@@ -1,29 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useTempoState } from "@/components/panel";
-import { DatePickerProps, TempoDate } from "@/types";
+import { DatePickerProps } from "@/types";
 import { when } from "@legendapp/state";
-import { useIsMounted, useObserveEffect } from "@legendapp/state/react";
+import { useIsMounted } from "@legendapp/state/react";
 import { useEffect } from "react";
+import { useSyncUpdates } from "./useSyncUpdates";
 
-export const useNotifyUpdates = ({ onChange, onDayChange, onMonthChange, onYearChange }: DatePickerProps) => {
-  const store$ = useTempoState();
+export const useNotifyUpdates = ({ onChange, onDayChange, onMonthChange, onYearChange, syncIdentifier }: DatePickerProps) => {
+  const state$ = useTempoState();
 
   const mounted = useIsMounted();
 
-  useObserveEffect<TempoDate>(store$.date, async ({ value }) => {
-    if (value) {
-      await when(!value._current, () => {
-        store$.date.month.set(value.month);
-      });
-
-      onChange?.(value);
-    }
-  });
+  useSyncUpdates(syncIdentifier);
 
   useEffect(() => {
     if (!mounted.get()) return undefined;
 
-    return store$.date.day.onChange(({ value }) => {
+    return state$.date.onChange(({ value }) => {
+      onChange?.(value);
+
+      when(!value._current, () => {
+        state$.date.month.set(value.month);
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!mounted.get()) return undefined;
+
+    return state$.date.day.onChange(({ value }) => {
       onDayChange?.(value);
     });
   }, []);
@@ -31,7 +36,7 @@ export const useNotifyUpdates = ({ onChange, onDayChange, onMonthChange, onYearC
   useEffect(() => {
     if (!mounted.get()) return undefined;
 
-    return store$.date.month.onChange(({ value }) => {
+    return state$.date.month.onChange(({ value }) => {
       onMonthChange?.(value);
     });
   }, []);
@@ -39,7 +44,7 @@ export const useNotifyUpdates = ({ onChange, onDayChange, onMonthChange, onYearC
   useEffect(() => {
     if (!mounted.get()) return undefined;
 
-    return store$.date.year.onChange(({ value }) => {
+    return state$.date.year.onChange(({ value }) => {
       onYearChange?.(value);
     });
   }, []);

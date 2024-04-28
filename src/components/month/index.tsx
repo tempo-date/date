@@ -3,7 +3,7 @@ import { ObservableObject, batch } from "@legendapp/state";
 import { For, observer, useComputed, useSelector } from "@legendapp/state/react";
 import styles from "./month.module.scss";
 import { monthStructure } from "@/core/date";
-import { cn } from "@/utils/cn";
+import { cn } from "@/utils";
 import { useTempoState } from "../panel";
 
 interface MonthItemProps {
