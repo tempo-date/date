@@ -8,6 +8,12 @@ export const useSyncUpdates = (broadcastTag?: string) => {
   const [channel] = useState(() => {
     if (!broadcastTag) return null;
 
+    if (typeof BroadcastChannel === "undefined") {
+      console.error("[tempo] your browser does not support BroadcastChannel API");
+
+      return null;
+    }
+
     return new BroadcastChannel(broadcastTag);
   });
 
@@ -15,14 +21,14 @@ export const useSyncUpdates = (broadcastTag?: string) => {
     return channel === null || !(channel instanceof BroadcastChannel);
   };
 
-  const dispose = useObserve(state$.date, ({ onCleanup, cancel, value }) => {
+  const dispose = useObserve(state$.date, ({ onCleanup = () => {}, cancel = false, value }) => {
     if (shouldDisableSyncing(channel)) {
-      onCleanup?.();
+      onCleanup();
 
       return undefined;
     }
 
-    channel.postMessage(value);
+    if (!cancel) channel.postMessage(value);
 
     onCleanup = channel.close;
 
@@ -31,7 +37,7 @@ export const useSyncUpdates = (broadcastTag?: string) => {
 
       cancel = true;
 
-      onCleanup?.();
+      onCleanup();
     };
   });
 

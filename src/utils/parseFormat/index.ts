@@ -1,12 +1,6 @@
-import { TempoDate } from "@/types";
+import { DateInfo } from "@/types";
 
-// year signature: YYYY/YY
-// month signature: MM
-// day signature: DD
-
-export const parseFormat = (format: string, date: TempoDate): string => {
-  if (!date.day) return "";
-
+export const formatDate = (date: DateInfo, format: string): string => {
   const year = date.year.toString();
 
   const month = date.month.toString().padStart(2, "0");

@@ -1,6 +1,6 @@
+import { getDefaultDate } from "@/core";
 import { Mode, PersistenceOptions, StateObject } from "@/types";
 import { PersistOptions } from "@legendapp/state";
-import { getDefaultDate } from "@/core/date";
 import { ObservablePersistLocalStorage as LS, ObservablePersistSessionStorage as SS } from "@legendapp/state/persist-plugins/local-storage";
 
 const setOptions = (options?: PersistenceOptions): PersistOptions<StateObject> => {

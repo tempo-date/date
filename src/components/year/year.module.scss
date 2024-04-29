@@ -1,0 +1,27 @@
+.tempo-year {
+  @apply w-12 h-10 m-0 p-0 rounded-sm flex justify-center items-center select-none cursor-pointer;
+
+  &:not(.tempo-year-active) {
+    @apply hover:bg-gray-100;
+  }
+}
+
+.tempo-panel-year-body {
+  @apply w-full h-[300px] p-2 grid grid-cols-3 place-items-center;
+}
+
+.tempo-year-neighbor {
+  @apply opacity-40;
+}
+
+.tempo-year-active {
+  @apply bg-sky-500;
+}
+
+.tempo-year-text {
+  @apply font-sans text-[14px] select-none;
+}
+
+.tempo-year-active-text {
+  @apply text-white font-sans text-[14px];
+}

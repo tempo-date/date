@@ -7,7 +7,7 @@
 }
 
 .tempo-header-text {
-  @apply text-balance text-[14px] font-sans hover:text-sky-400 cursor-pointer;
+  @apply text-balance text-[14px] font-sans hover:text-sky-400 cursor-pointer select-none;
 }
 
 .tempo-header-nav {

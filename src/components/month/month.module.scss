@@ -15,7 +15,7 @@
 }
 
 .tempo-month-text {
-  @apply font-sans text-[14px];
+  @apply font-sans text-[14px] select-none;
 }
 
 .tempo-month-active-text {

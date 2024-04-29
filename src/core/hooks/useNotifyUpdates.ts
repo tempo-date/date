@@ -5,22 +5,26 @@ import { useEffect } from "react";
 import { useSyncUpdates } from "./useSyncUpdates";
 import { useConsumeState } from "../provider/hook";
 import { InternalPickerProps } from "@/types";
-import { getDateInfo } from "@/utils/dateInfo";
+import { getDateInfo } from "@/utils";
+import { getDecade } from "../utilities";
 
 export const useNotifyUpdates = (props: InternalPickerProps) => {
+  const { broadcastTag, ...fns } = props;
+
   const state$ = useConsumeState();
 
   const mounted = useIsMounted();
 
-  useSyncUpdates(props.broadcastTag);
+  useSyncUpdates(broadcastTag);
 
   useEffect(() => {
     if (!mounted.get()) return undefined;
 
     return state$.date.onChange(({ value }) => {
-      props.onChange?.(getDateInfo(value));
-
+      //INTERNALS
       when(!value._current, () => state$.date.month.set(value.month));
+
+      fns.onChange?.(getDateInfo(value));
     });
   }, []);
 
@@ -28,7 +32,7 @@ export const useNotifyUpdates = (props: InternalPickerProps) => {
     if (!mounted.get()) return undefined;
 
     return state$.date.day.onChange(({ value }) => {
-      props.onDayChange?.(value);
+      fns.onDayChange?.(value);
     });
   }, []);
 
@@ -36,7 +40,7 @@ export const useNotifyUpdates = (props: InternalPickerProps) => {
     if (!mounted.get()) return undefined;
 
     return state$.date.month.onChange(({ value }) => {
-      props.onMonthChange?.(value);
+      fns.onMonthChange?.(value);
     });
   }, []);
 
@@ -44,7 +48,10 @@ export const useNotifyUpdates = (props: InternalPickerProps) => {
     if (!mounted.get()) return undefined;
 
     return state$.date.year.onChange(({ value }) => {
-      props.onYearChange?.(value);
+      //INTERNALS
+      state$.date._decade.set(getDecade(value));
+
+      fns.onYearChange?.(value);
     });
   }, []);
 };

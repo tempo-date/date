@@ -1,17 +1,17 @@
 import { For, observer, useComputed } from "@legendapp/state/react";
 import styles from "./day.module.scss";
-import { getDays } from "@/core/date";
 import { useConsumeState } from "@/core/provider/hook";
 import { DayItem } from "./item";
+import { computeDays } from "@/core";
 
 const Days = observer(() => {
   const state$ = useConsumeState();
 
   const data$ = useComputed(() => {
-    const year = state$.date.year.peek();
+    const year = state$.date.year.get(true);
     const month = state$.date.month.get(true);
 
-    return getDays(year, month);
+    return computeDays(year, month);
   });
 
   return (

@@ -5,8 +5,9 @@ export type Nullable<T> = T | null;
 interface DateInternalProps {
   _current?: boolean;
   _weekend?: boolean;
-  __m?: number;
-  __y?: number;
+  _decade?: number;
+  _m?: number;
+  _y?: number;
 }
 
 export interface DateInfo {
@@ -26,6 +27,11 @@ export type MonthObject = {
   name: string;
   year: number;
   month: number;
+};
+
+export type YearObject = {
+  year: number;
+  _current?: boolean;
 };
 
 export enum Mode {

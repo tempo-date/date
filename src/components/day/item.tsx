@@ -17,7 +17,7 @@ export const DayItem = observer(({ item$ }: DayItemProps) => {
 
   const onSelectDay = () => {
     batch(() => {
-      state$.date.__m.set(item$.month.get(true));
+      state$.date._m.set(item$.month.get(true));
       state$.date.set(item$.get(true));
     });
   };

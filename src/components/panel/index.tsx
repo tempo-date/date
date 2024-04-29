@@ -1,12 +1,13 @@
 import { Suspense, lazy } from "react";
 import { Switch, observer } from "@legendapp/state/react";
 import { useConsumeState } from "@/core/provider/hook";
-import Header from "../header";
 import { Mode } from "@/types";
+import Header from "../header";
 import styles from "./panel.module.scss";
 
 const Days = lazy(() => import("../day"));
 const Months = lazy(() => import("../month"));
+const Years = lazy(() => import("../year"));
 
 export const Panel = observer(() => {
   const state$ = useConsumeState();
@@ -19,7 +20,7 @@ export const Panel = observer(() => {
           {{
             [Mode.DAY]: () => <Days />,
             [Mode.MONTH]: () => <Months />,
-            [Mode.YEAR]: () => <h1>year panel</h1>,
+            [Mode.YEAR]: () => <Years />,
             default: () => null,
           }}
         </Switch>
