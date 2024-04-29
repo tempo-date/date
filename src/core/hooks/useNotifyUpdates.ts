@@ -1,27 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useTempoState } from "@/components/panel";
-import { DatePickerProps } from "@/types";
 import { when } from "@legendapp/state";
 import { useIsMounted } from "@legendapp/state/react";
 import { useEffect } from "react";
 import { useSyncUpdates } from "./useSyncUpdates";
+import { useConsumeState } from "../provider/hook";
+import { InternalPickerProps } from "@/types";
+import { getDateInfo } from "@/utils/dateInfo";
 
-export const useNotifyUpdates = ({ onChange, onDayChange, onMonthChange, onYearChange, syncIdentifier }: DatePickerProps) => {
-  const state$ = useTempoState();
+export const useNotifyUpdates = (props: InternalPickerProps) => {
+  const state$ = useConsumeState();
 
   const mounted = useIsMounted();
 
-  useSyncUpdates(syncIdentifier);
+  useSyncUpdates(props.broadcastTag);
 
   useEffect(() => {
     if (!mounted.get()) return undefined;
 
     return state$.date.onChange(({ value }) => {
-      onChange?.(value);
+      props.onChange?.(getDateInfo(value));
 
-      when(!value._current, () => {
-        state$.date.month.set(value.month);
-      });
+      when(!value._current, () => state$.date.month.set(value.month));
     });
   }, []);
 
@@ -29,7 +28,7 @@ export const useNotifyUpdates = ({ onChange, onDayChange, onMonthChange, onYearC
     if (!mounted.get()) return undefined;
 
     return state$.date.day.onChange(({ value }) => {
-      onDayChange?.(value);
+      props.onDayChange?.(value);
     });
   }, []);
 
@@ -37,7 +36,7 @@ export const useNotifyUpdates = ({ onChange, onDayChange, onMonthChange, onYearC
     if (!mounted.get()) return undefined;
 
     return state$.date.month.onChange(({ value }) => {
-      onMonthChange?.(value);
+      props.onMonthChange?.(value);
     });
   }, []);
 
@@ -45,7 +44,7 @@ export const useNotifyUpdates = ({ onChange, onDayChange, onMonthChange, onYearC
     if (!mounted.get()) return undefined;
 
     return state$.date.year.onChange(({ value }) => {
-      onYearChange?.(value);
+      props.onYearChange?.(value);
     });
   }, []);
 };

@@ -1,14 +1,14 @@
-import { useTempoState } from "@/components/panel";
 import { useObserve, useUnmountOnce } from "@legendapp/state/react";
 import { useEffect, useState } from "react";
+import { useConsumeState } from "../provider/hook";
 
-export const useSyncUpdates = (syncIdentifier = "__SYNC_BYPASS_ID__") => {
-  const state$ = useTempoState();
+export const useSyncUpdates = (broadcastTag?: string) => {
+  const state$ = useConsumeState();
 
   const [channel] = useState(() => {
-    if (syncIdentifier === "__SYNC_BYPASS_ID__") return null;
+    if (!broadcastTag) return null;
 
-    return new BroadcastChannel(syncIdentifier);
+    return new BroadcastChannel(broadcastTag);
   });
 
   const shouldDisableSyncing = (channel: BroadcastChannel | null): channel is null => {
@@ -51,5 +51,5 @@ export const useSyncUpdates = (syncIdentifier = "__SYNC_BYPASS_ID__") => {
     return () => {
       channel.removeEventListener("message", handleMessage);
     };
-  }, [channel, state$.date, syncIdentifier]);
+  }, [channel, state$.date]);
 };

@@ -2,6 +2,6 @@
   @apply flex flex-col justify-start rounded-sm w-[400px] border bg-white border-gray-100 overflow-hidden;
 }
 
-.tempo-panel-header {
-  @apply w-full border-b border-gray-100 px-3 flex justify-between items-center h-10;
+.tempo-placeholder {
+  @apply w-full h-[300px] bg-transparent;
 }

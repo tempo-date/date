@@ -1,4 +1,4 @@
-import { MonthStruct, TempoDate, Tuple } from "@/types";
+import { DateObject, MonthObject, Tuple } from "@/types";
 import { MONTHS } from "./constants/months";
 import moment from "moment-jalaali";
 
@@ -10,7 +10,7 @@ const WEEKEND_INDEX = 6;
 const inc = (count: number) => count + 1;
 const dec = (count: number) => count - 1;
 
-export function monthStructure(year: number): Array<MonthStruct> {
+export function monthStructure(year: number): Array<MonthObject> {
   return MONTHS.map((name, index) => ({ name, year, month: inc(index) }));
 }
 
@@ -32,13 +32,13 @@ export function weekday(year: number, month: number, day = 1) {
   return moment(join(year, month, day), "jYYYY-jM-jD").weekday();
 }
 
-export function createDate(y: number, m: number, d: number): TempoDate {
+export function createDate(y: number, m: number, d: number): DateObject {
   const day = { day: d, month: m, year: y, __m: m, __y: y };
 
   return day;
 }
 
-function createDateList(length: number, cb: (index: number) => TempoDate) {
+function createDateList(length: number, cb: (index: number) => DateObject) {
   return Array.from({ length }, (_, counter) => cb(counter));
 }
 
@@ -54,11 +54,11 @@ function getNextMonthAsTuple(year: number, month: number): Tuple<2> {
   return [year, inc(month)];
 }
 
-export function getCurrentMonthDays(year: number, month: number): Array<TempoDate> {
+export function getCurrentMonthDays(year: number, month: number): Array<DateObject> {
   return createDateList(getMonthLength(year, month), (counter) => createDate(year, month, inc(counter)));
 }
 
-export function getPreviousMonthDays(year: number, month: number): Array<TempoDate> {
+export function getPreviousMonthDays(year: number, month: number): Array<DateObject> {
   const currentFirstDay = weekday(year, month);
 
   const prevMonthAsTuple = getPrevMonthAsTuple(year, month);
@@ -68,18 +68,18 @@ export function getPreviousMonthDays(year: number, month: number): Array<TempoDa
   return createDateList(currentFirstDay, (counter) => createDate(...prevMonthAsTuple, daysCount - counter)).reverse();
 }
 
-export function getNextMonthDays(year: number, month: number, count: number): Array<TempoDate> {
+export function getNextMonthDays(year: number, month: number, count: number): Array<DateObject> {
   if (count < 1) return [];
 
   return createDateList(count, (counter) => createDate(...getNextMonthAsTuple(year, month), inc(counter)));
 }
 
-function getWeekend({ year, month, day }: TempoDate) {
+function getWeekend({ year, month, day }: DateObject) {
   return weekday(year, month, day ?? 1) === WEEKEND_INDEX;
 }
 
-export function getDays(year: number, month: number): Array<TempoDate> {
-  const days = new Array<TempoDate>();
+export function getDays(year: number, month: number): Array<DateObject> {
+  const days = new Array<DateObject>();
 
   const previousDays = getPreviousMonthDays(year, month);
 
@@ -91,7 +91,7 @@ export function getDays(year: number, month: number): Array<TempoDate> {
 
   days.push(...nextDays);
 
-  function current(date: TempoDate) {
+  function current(date: DateObject) {
     return date.year === year && date.month === month;
   }
 
@@ -105,7 +105,7 @@ export function getDays(year: number, month: number): Array<TempoDate> {
   return markedDays;
 }
 
-export function defaultDate(): TempoDate {
+export function getDefaultDate(): DateObject {
   const now = moment();
 
   const year = Number(now.format("jYYYY"));

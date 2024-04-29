@@ -6,14 +6,14 @@ import MonthForward from "@/assets/icons/chevron-left.svg?react";
 import MonthBackward from "@/assets/icons/chevron-right.svg?react";
 import YearForward from "@/assets/icons/chevrons-left.svg?react";
 import YearBackward from "@/assets/icons/chevrons-right.svg?react";
-import { useTempoState } from "../panel";
 import { Mode } from "@/types";
+import { useConsumeState } from "@/core/provider/hook";
 
-export const Header = observer(() => {
-  const state$ = useTempoState();
+const Header = observer(() => {
+  const state$ = useConsumeState();
 
   return (
-    <Fragment>
+    <div className={styles["tempo-panel-header"]}>
       <div className={styles["tempo-header-nav"]}>
         <YearBackward className="size-[14px] cursor-pointer" />
         <MonthBackward className="size-[14px] cursor-pointer" />
@@ -34,6 +34,8 @@ export const Header = observer(() => {
         <MonthForward className="size-[14px] cursor-pointer" />
         <YearForward className="size-[14px] cursor-pointer" />
       </div>
-    </Fragment>
+    </div>
   );
 });
+
+export default Header;

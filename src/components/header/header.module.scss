@@ -1,3 +1,7 @@
+.tempo-panel-header {
+  @apply w-full border-b border-gray-100 px-3 flex justify-between items-center h-10;
+}
+
 .tempo-header {
   @apply flex justify-center items-center gap-2;
 }

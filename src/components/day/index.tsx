@@ -1,50 +1,11 @@
-import { TempoDate } from "@/types";
-import { ObservableObject, batch } from "@legendapp/state";
 import { For, observer, useComputed } from "@legendapp/state/react";
 import styles from "./day.module.scss";
 import { getDays } from "@/core/date";
-import { cn } from "@/utils";
-import { useTempoState } from "../panel";
-import { useCurrentDate } from "@/core/hooks";
+import { useConsumeState } from "@/core/provider/hook";
+import { DayItem } from "./item";
 
-interface DayItemProps {
-  item$: ObservableObject<TempoDate>;
-}
-
-const DayItem = observer(({ item$ }: DayItemProps) => {
-  const state$ = useTempoState();
-
-  const isCurrent = useCurrentDate(item$);
-
-  const onSelectDay = () => {
-    batch(() => {
-      state$.date.__m.set(item$.month.get(true));
-      state$.date.set(item$.get(true));
-    });
-  };
-
-  return (
-    <div
-      className={cn(styles["tempo-day"], {
-        [styles["tempo-day-neighbor"]]: !item$._current.get(true),
-        [styles["tempo-day-active"]]: isCurrent,
-      })}
-      onClick={onSelectDay}
-    >
-      <span
-        className={cn(styles["tempo-day-text"], {
-          [styles["tempo-day-weekend"]]: item$._weekend.get(true),
-          [styles["tempo-day-active-text"]]: isCurrent,
-        })}
-      >
-        {item$.day.get()}
-      </span>
-    </div>
-  );
-});
-
-export const Days = observer(() => {
-  const state$ = useTempoState();
+const Days = observer(() => {
+  const state$ = useConsumeState();
 
   const data$ = useComputed(() => {
     const year = state$.date.year.peek();
@@ -59,3 +20,5 @@ export const Days = observer(() => {
     </div>
   );
 });
+
+export default Days;
