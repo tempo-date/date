@@ -1,10 +1,10 @@
 import moment from "moment-jalaali";
-import { DateObject, MonthObject, Tuple, YearObject } from "@/types";
+import { DateInfo, DateObject, DisabledDates, MonthObject, Tuple, YearObject } from "@/types";
 import { MONTHS } from "../constants";
-import { DAYS_COUNT, DECADE, FIRST_MONTH, LAST_MONTH, MAX_CACHE_SIZE, WEEKEND_INDEX } from "../constants/internals";
-import cache from "../cache";
+import { DECADE, FIRST_MONTH, LAST_MONTH, WEEKEND_INDEX } from "../constants/internals";
+import { DateInstance } from "@/utils";
 
-export function getDecade(year: number) {
+export function decadeIndex(year: number) {
   return Math.floor(year / DECADE) * DECADE;
 }
 
@@ -37,7 +37,7 @@ export function getMonthName(year: number, month: number | undefined) {
   if (monthObject) return monthObject.name;
 }
 
-function join(...inputs: number[]) {
+export function join(...inputs: number[]) {
   return inputs.join("-");
 }
 
@@ -47,9 +47,9 @@ export function weekday(year: number, month: number, day = 1) {
 
 export function createDate(year: number, month: number, day: number): DateObject {
   const _weekend = isWeekend({ year, month, day });
-  const _decade = getDecade(year);
+  const _decadeIndex = decadeIndex(year);
 
-  const date: DateObject = { day, month, year, _m: month, _y: year, _weekend, _decade };
+  const date: DateObject = { day, month, year, _m: month, _y: year, _weekend, _decadeIndex };
 
   return date;
 }
@@ -90,46 +90,8 @@ export function getNextMonthDays(year: number, month: number, count: number): Ar
   return createDateList(count, (counter) => createDate(...getNextMonthAsTuple(year, month), counter + 1));
 }
 
-function isWeekend({ year, month, day }: DateObject) {
+export function isWeekend({ year, month, day }: DateObject) {
   return weekday(year, month, day ?? 1) === WEEKEND_INDEX;
-}
-
-export function computeDays(year: number, month: number): Array<DateObject> {
-  const key = join(year, month);
-
-  if (cache.has(key)) return cache.get(key)!;
-
-  const days = new Array<DateObject>();
-
-  const previousDays = getPreviousMonthDays(year, month);
-
-  const currentDays = getCurrentMonthDays(year, month);
-
-  days.push(...previousDays, ...currentDays);
-
-  const nextDays = getNextMonthDays(year, month, DAYS_COUNT - days.length);
-
-  days.push(...nextDays);
-
-  function current(date: DateObject) {
-    return date.year === year && date.month === month;
-  }
-
-  const markedDays = days.map((date) => {
-    date["_current"] = current(date);
-    date["_decade"] = getDecade(date.year);
-    date["_weekend"] = isWeekend(date);
-
-    return date;
-  });
-
-  cache.set(key, markedDays);
-
-  if (cache.size > MAX_CACHE_SIZE) {
-    cache.delete(cache.keys().next().value);
-  }
-
-  return markedDays;
 }
 
 export function getDefaultDate(): DateObject {
@@ -142,4 +104,78 @@ export function getDefaultDate(): DateObject {
   if (entries.some((entry) => !entry)) throw new Error("[tempo] cannot get current date");
 
   return { ...createDate(...entries), _current: true };
+}
+
+function isArrayDisableDates(disabledDates?: DisabledDates): disabledDates is Array<DateInfo> {
+  return !!disabledDates && Array.isArray(disabledDates);
+}
+
+function isFunctionDisableDates(disabledDates?: DisabledDates): disabledDates is (instance: DateInstance) => boolean {
+  return !!disabledDates && typeof disabledDates === "function";
+}
+
+export function isDateEquals(date: DateObject, compareDate: DateObject) {
+  return date.year === compareDate.year && date.month === compareDate.month && date.day === compareDate.day;
+}
+
+export function isGreaterThan(date1: DateObject, date2: DateObject, strategy: keyof DateInfo) {
+  switch (strategy) {
+    case "year": {
+      return date1.year > date2.year;
+    }
+    case "month": {
+      return date1.month > date2.month;
+    }
+    case "day": {
+      return date1.day > date2.day;
+    }
+    default:
+      return false;
+  }
+}
+
+export function isLessThan(date1: DateObject, date2: DateObject, strategy: keyof DateInfo) {
+  switch (strategy) {
+    case "year": {
+      return date1.year < date2.year;
+    }
+    case "month": {
+      return date1.month < date2.month;
+    }
+    case "day": {
+      return date1.day < date2.day;
+    }
+    default:
+      return false;
+  }
+}
+
+export function isSomeLessThan(date1: DateObject, date2: DateObject) {
+  return isLessThan(date1, date2, "year") || isLessThan(date1, date2, "month") || isLessThan(date1, date2, "day");
+}
+
+export function isEveryLessThan(date1: DateObject, date2: DateObject) {
+  return isLessThan(date1, date2, "year") && isLessThan(date1, date2, "month") && isLessThan(date1, date2, "day");
+}
+
+export function isSomeGreaterThan(date1: DateObject, date2: DateObject) {
+  return isGreaterThan(date1, date2, "year") || isGreaterThan(date1, date2, "month") || isGreaterThan(date1, date2, "day");
+}
+
+export function isEveryGreaterThan(date1: DateObject, date2: DateObject) {
+  return isGreaterThan(date1, date2, "year") && isGreaterThan(date1, date2, "month") && isGreaterThan(date1, date2, "day");
+}
+
+export function isDisabledDate(date: DateObject, disabledDates?: DisabledDates) {
+  if (isArrayDisableDates(disabledDates) && disabledDates.some((predicate) => isDateEquals(date, predicate))) {
+    return true;
+  }
+
+  if (isFunctionDisableDates(disabledDates)) {
+    const instance = new DateInstance(date);
+
+    return disabledDates(instance);
+  }
+
+  return false;
 }

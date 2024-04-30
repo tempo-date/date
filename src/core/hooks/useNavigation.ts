@@ -43,12 +43,12 @@ export const useNavigation = () => {
 
   // TODO lower/upper bounds limitation 0 to 9999
   const onNextDecade = () => {
-    state$.date._decade.set((previous) => previous + DECADE);
+    state$.date._decadeIndex.set((previous) => previous + DECADE);
   };
 
   // TODO lower/upper bounds limitation 0 to 9999
   const onPreviousDecade = () => {
-    state$.date._decade.set((previous) => previous - DECADE);
+    state$.date._decadeIndex.set((previous) => previous - DECADE);
   };
 
   return { onNextMonth, onNextYear, onPreviousMonth, onPreviousYear, onNextDecade, onPreviousDecade };

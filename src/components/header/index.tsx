@@ -47,7 +47,7 @@ const DecadeHeader = observer(() => {
 
   const { onNextDecade, onPreviousDecade } = useNavigation();
 
-  const [start, end] = getDecadeBounds(state$.date._decade.get(true));
+  const [start, end] = getDecadeBounds(state$.date._decadeIndex.get(true));
 
   const onSelectDecadeYear = (year: number) => {
     batch(() => {

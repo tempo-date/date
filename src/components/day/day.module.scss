@@ -1,7 +1,7 @@
 .tempo-day {
   @apply w-10 h-10 m-0 p-0 rounded-sm flex justify-center items-center select-none cursor-pointer;
 
-  &:not(.tempo-day-active) {
+  &:not(:is(.tempo-day-active, .tempo-day-disabled)) {
     @apply hover:bg-gray-100;
   }
 }
@@ -18,7 +18,11 @@
   @apply text-red-500;
 }
 
-.tempo-day-active {
+.tempo-day-disabled {
+  @apply opacity-30 cursor-default;
+}
+
+.tempo-day-active:not(.tempo-day-disabled) {
   @apply bg-sky-500;
 }
 
@@ -26,6 +30,6 @@
   @apply text-[14px] font-sans select-none;
 }
 
-.tempo-day-active-text {
+.tempo-day-active-text:not(.tempo-day-disabled-text) {
   @apply text-white;
 }
