@@ -7,7 +7,7 @@ export type Nullable<T> = T | null;
 interface DateInternalProps {
   _current?: boolean;
   _weekend?: boolean;
-  _decadeIndex?: number;
+  _decadeStart?: number;
   _m?: number;
   _y?: number;
 }

@@ -1,8 +1,8 @@
 import { For, observer, useComputed } from "@legendapp/state/react";
 import { useConsumeState } from "@/core/provider/hook";
 import { DayItem } from "./item";
-import { computeDays } from "@/core/utilities/days";
 import { useProperties } from "../picker/updater/hook";
+import { computeDays } from "@/core";
 import styles from "./day.module.scss";
 
 const Days = observer(() => {

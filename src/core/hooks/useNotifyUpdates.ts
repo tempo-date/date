@@ -6,7 +6,7 @@ import { useSyncUpdates } from "./useSyncUpdates";
 import { useConsumeState } from "../provider/hook";
 import { InternalPickerProps } from "@/types";
 import { getDateInfo } from "@/utils";
-import { decadeIndex } from "../utilities";
+import { getDecadeStart } from "../utilities";
 
 export const useNotifyUpdates = (props: InternalPickerProps) => {
   const { broadcastTag, ...fns } = props;
@@ -49,7 +49,7 @@ export const useNotifyUpdates = (props: InternalPickerProps) => {
 
     return state$.date.year.onChange(({ value }) => {
       //INTERNALS
-      state$.date._decadeIndex.set(decadeIndex(value));
+      state$.date._decadeStart.set(getDecadeStart(value));
 
       fns.onYearChange?.(value);
     });

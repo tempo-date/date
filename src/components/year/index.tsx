@@ -8,7 +8,7 @@ const Years = observer(() => {
   const state$ = useConsumeState();
 
   const data$ = useComputed(() => {
-    return getYearsObject(state$.date._decadeIndex.get(true));
+    return getYearsObject(state$.date._decadeStart.get(true));
   });
 
   return (

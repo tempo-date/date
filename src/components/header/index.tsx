@@ -7,9 +7,9 @@ import YearBackward from "@/assets/icons/chevrons-right.svg?react";
 import { useConsumeState } from "@/core/provider/hook";
 import { useNavigation } from "@/core/hooks";
 import { Mode } from "@/types";
-import styles from "./header.module.scss";
 import { getDecadeBounds, getMonthName } from "@/core";
 import { batch } from "@legendapp/state";
+import styles from "./header.module.scss";
 
 const DefaultHeader = observer(() => {
   const state$ = useConsumeState();
@@ -47,7 +47,7 @@ const DecadeHeader = observer(() => {
 
   const { onNextDecade, onPreviousDecade } = useNavigation();
 
-  const [start, end] = getDecadeBounds(state$.date._decadeIndex.get(true));
+  const [start, end] = getDecadeBounds(state$.date._decadeStart.get(true));
 
   const onSelectDecadeYear = (year: number) => {
     batch(() => {
