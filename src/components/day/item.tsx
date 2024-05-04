@@ -1,18 +1,20 @@
 import { useCurrentDate } from "@/core/hooks";
 import { useConsumeState } from "@/core/provider/hook";
-import { DateObject, DisabledDates } from "@/types";
+import { CustomRenderer, DateObject, DayRendererProps, DisabledDates } from "@/types";
 import { ObservableObject, batch } from "@legendapp/state";
 import { Memo, observer, useSelector } from "@legendapp/state/react";
 import styles from "./day.module.scss";
 import { cn } from "@/utils";
 import { isDisabledDate } from "@/core";
+import { ReactElement } from "react";
 
 interface DayItemProps {
   item$: ObservableObject<DateObject>;
   disabledDates?: DisabledDates;
+  render?: ReactElement<DayRendererProps>;
 }
 
-export const DayItem = observer(({ item$, disabledDates }: DayItemProps) => {
+export const DayItem = observer(({ item$, render, disabledDates }: DayItemProps) => {
   const state$ = useConsumeState();
 
   const isActive = useCurrentDate(item$);
@@ -23,7 +25,7 @@ export const DayItem = observer(({ item$, disabledDates }: DayItemProps) => {
 
   const isCurrent = useSelector(item$._current);
 
-  const onSelectDay = () => {
+  const select = () => {
     if (isDisabled) return;
 
     batch(() => {
@@ -32,10 +34,13 @@ export const DayItem = observer(({ item$, disabledDates }: DayItemProps) => {
     });
   };
 
+  if (render) return render.props.children({ isActive, isCurrent, isDisabled, isWeekend, select });
+
   // TODO: provide aria attributes
   return (
     <div
-      onClick={onSelectDay}
+      id="day-renderer"
+      onClick={select}
       className={cn(styles["tempo-day"], {
         [styles["tempo-day-neighbor"]]: !isCurrent,
         [styles["tempo-day-disabled"]]: isDisabled,

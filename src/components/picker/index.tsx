@@ -7,14 +7,14 @@ import { Updater } from "./updater";
 import { Panel } from "../panel";
 
 export const DatePicker = (props: DatePickerProps) => {
-  const { persistOptions, ...internalProps } = props;
+  const { children, persistOptions, ...internalProps } = props;
 
   const state$ = usePersistedObservable<StateObject>(...init(persistOptions));
 
   return (
     <StateProvider value={state$}>
       <Updater {...internalProps}>
-        <Panel />
+        <Panel $renderer={children} />
       </Updater>
     </StateProvider>
   );

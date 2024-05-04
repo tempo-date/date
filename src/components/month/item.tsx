@@ -12,9 +12,9 @@ interface MonthItemProps {
 export const MonthItem = observer(({ item$ }: MonthItemProps) => {
   const state$ = useConsumeState();
 
-  const isCurrent = useSelector(() => item$.month.get() === state$.date.month.get());
+  const isActive = useSelector(() => item$.month.get() === state$.date.month.get());
 
-  const onSelectMonth = () => {
+  const select = () => {
     batch(() => {
       state$.date.month.set(item$.month.get(true));
       state$.date._y.set(item$.year.get(true));
@@ -25,13 +25,13 @@ export const MonthItem = observer(({ item$ }: MonthItemProps) => {
   return (
     <div
       className={cn(styles["tempo-month"], {
-        [styles["tempo-month-active"]]: isCurrent,
+        [styles["tempo-month-active"]]: isActive,
       })}
-      onClick={onSelectMonth}
+      onClick={select}
     >
       <span
         className={cn(styles["tempo-month-text"], {
-          [styles["tempo-month-active-text"]]: isCurrent,
+          [styles["tempo-month-active-text"]]: isActive,
         })}
       >
         {item$.name.get()}

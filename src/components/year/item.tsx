@@ -14,7 +14,7 @@ export const YearItem = observer(({ item$ }: YearItemProps) => {
 
   const isActive = useSelector(() => item$.year.get() === state$.date.year.get());
 
-  const onSelectYear = () => {
+  const select = () => {
     batch(() => {
       state$.date.year.set(item$.year.get(true));
       state$.mode.set(Mode.MONTH);
@@ -27,7 +27,7 @@ export const YearItem = observer(({ item$ }: YearItemProps) => {
         [styles["tempo-year-active"]]: isActive,
         [styles["tempo-year-neighbor"]]: !item$._current.get(true),
       })}
-      onClick={onSelectYear}
+      onClick={select}
     >
       <span
         className={cn(styles["tempo-year-text"], {

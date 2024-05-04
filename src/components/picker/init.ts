@@ -1,6 +1,7 @@
 import { getDefaultDate } from "@/core";
 import { Mode, PersistenceOptions, StateObject } from "@/types";
 import { PersistOptions } from "@legendapp/state";
+import { nanoid } from "nanoid";
 import { ObservablePersistLocalStorage as LS, ObservablePersistSessionStorage as SS } from "@legendapp/state/persist-plugins/local-storage";
 
 const setOptions = (options?: PersistenceOptions): PersistOptions<StateObject> => {
@@ -21,5 +22,5 @@ const setOptions = (options?: PersistenceOptions): PersistOptions<StateObject> =
 };
 
 export const init = (options?: PersistenceOptions): [StateObject, PersistOptions<StateObject>] => {
-  return [{ date: getDefaultDate(), mode: Mode.DAY }, setOptions(options)];
+  return [{ _internal_id: nanoid(12), date: getDefaultDate(), mode: Mode.DAY }, setOptions(options)];
 };
